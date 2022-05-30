@@ -6,7 +6,7 @@
 /*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:43:37 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/05/27 23:58:04 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/05/30 16:46:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_stash {
 typedef struct s_book_data {
 	int					fd;
 	int					len;
-	struct {
+	struct s_last{
 		t_stash			*read;
 		t_stash			*stash;
 	}	last;

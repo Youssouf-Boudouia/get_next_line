@@ -6,7 +6,7 @@
 /*   By: yboudoui <yboudoui@student.41.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:42:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/05/27 23:58:22 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/05/30 17:43:23 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,22 @@ char	*ft_find_line(t_book book)
 {
 	char	*out;
 	int		offset;
+	t_stash	*old;
 
 	if (!ft_have_newline(book))
 		return (NULL);
+	offset = 0;
 	out = malloc((book->len + 1) * sizeof(char));
 	if (!out)
 		return (NULL);
-	offset = 0;
 	while (book->stash)
 	{
 		ft_strncpy(out + offset, book->stash->buffer, book->stash->readed);
 		offset += book->stash->readed;
-		ft_delete(&book->stash);
+		old = book->stash;
+		book->stash = book->stash->next;
+		free(old->buffer);
+		free(old);
 	}
 	out[offset] = '\0';
 	book->len = 0;
@@ -95,10 +99,11 @@ char	*get_next_line(int fd)
 	while (!line)
 	{
 		book->last.read->readed = read(
-			book->fd,
-			book->last.read->buffer,
-			BUFFER_SIZE);
-		if ((book->last.read->readed < 0) || (book->last.read->readed == 0 && book->stash == NULL))
+				book->fd,
+				book->last.read->buffer,
+				BUFFER_SIZE);
+		if ((book->last.read->readed < 0)
+			|| (book->last.read->readed == 0 && book->stash == NULL))
 			break ;
 		line = ft_find_line(book);
 	}
