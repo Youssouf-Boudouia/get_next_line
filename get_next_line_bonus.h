@@ -6,7 +6,7 @@
 /*   By: yboudoui <yboudoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:43:37 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/05/30 16:46:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/06/11 16:16:30 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,10 @@ typedef struct s_book_data {
 typedef t_book_data*	t_book;
 
 int		ft_create_stach(t_stash **root);
-int		ft_have_newline(t_book book);
 void	ft_delete(t_stash **root);
 
 void	ft_add_stash_to_book(t_book book, t_stash *stash);
-void	ft_strncpy(char *dst, char *src, int n);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 char	*get_next_line(int fd);
 

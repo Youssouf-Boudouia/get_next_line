@@ -6,13 +6,13 @@
 /*   By: yboudoui <yboudoui@student.41.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:42:36 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/05/30 17:43:23 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/06/11 16:12:06 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-int	ft_have_newline(t_book book)
+static int	ft_have_newline(t_book book)
 {
 	t_stash	*new;
 	int		index;
@@ -33,18 +33,17 @@ int	ft_have_newline(t_book book)
 	if (index == book->last.read->readed)
 		return (NOK);
 	book->last.read->readed -= new->readed;
-	ft_strncpy(
+	ft_memcpy(
 		book->last.read->buffer,
 		book->last.read->buffer + new->readed,
 		book->last.read->readed);
 	return (OK);
 }
 
-char	*ft_find_line(t_book book)
+static char	*ft_find_line(t_book book)
 {
 	char	*out;
 	int		offset;
-	t_stash	*old;
 
 	if (!ft_have_newline(book))
 		return (NULL);
@@ -54,19 +53,16 @@ char	*ft_find_line(t_book book)
 		return (NULL);
 	while (book->stash)
 	{
-		ft_strncpy(out + offset, book->stash->buffer, book->stash->readed);
+		ft_memcpy(out + offset, book->stash->buffer, book->stash->readed);
 		offset += book->stash->readed;
-		old = book->stash;
-		book->stash = book->stash->next;
-		free(old->buffer);
-		free(old);
+		ft_delete(&book->stash);
 	}
 	out[offset] = '\0';
 	book->len = 0;
 	return (out);
 }
 
-t_book	ft_get_book(int fd)
+static t_book	ft_get_book(int fd)
 {
 	static t_book	library = NULL;
 	t_book			*book_ref;
@@ -87,6 +83,21 @@ t_book	ft_get_book(int fd)
 	return (*book_ref);
 }
 
+static int	ft_reader(t_book book)
+{
+	int		readed;
+	char	*buffer;
+
+	buffer = book->last.read->buffer;
+	readed = read(book->fd, buffer, BUFFER_SIZE);
+	book->last.read->readed = readed;
+	if (readed < 0)
+		return (ERROR);
+	if (!readed && book->stash == NULL)
+		return (NOK);
+	return (OK);
+}
+
 char	*get_next_line(int fd)
 {
 	char	*line;
@@ -98,12 +109,7 @@ char	*get_next_line(int fd)
 	line = ft_find_line(book);
 	while (!line)
 	{
-		book->last.read->readed = read(
-				book->fd,
-				book->last.read->buffer,
-				BUFFER_SIZE);
-		if ((book->last.read->readed < 0)
-			|| (book->last.read->readed == 0 && book->stash == NULL))
+		if (!ft_reader(book))
 			break ;
 		line = ft_find_line(book);
 	}

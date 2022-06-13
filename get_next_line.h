@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:51:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/05/30 16:51:50 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:22:47 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,14 @@
 
 # include <stddef.h>
 # include <stdlib.h>
+# include <limits.h>
 # include <unistd.h>
+
+#include <stdio.h>
+# if BUFFER_SIZE < 0
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 0
+# endif
 
 # define OK 1
 # define NOK 0
@@ -27,25 +34,22 @@ typedef struct s_stash {
 	struct s_stash	*next;
 }	t_stash;
 
-typedef struct s_book_data {
-	int					fd;
-	int					len;
-	struct s_last{
-		t_stash			*read;
-		t_stash			*stash;
-	}	last;
-	t_stash				*stash;
-	struct s_book_data	*next;
-}	t_book_data;
-
-typedef t_book_data*	t_book;
+typedef struct s_book {
+	int				fd;
+	int				len;
+	t_stash			*read;
+	t_stash			*last;
+	t_stash			*stash;
+	struct s_book	*next;
+	struct s_book	*prev;
+}	t_book;
 
 int		ft_create_stach(t_stash **root);
-int		ft_have_newline(t_book book);
 void	ft_delete(t_stash **root);
+void	ft_delete_book(t_book **root);
 
-void	ft_add_stash_to_book(t_book book, t_stash *stash);
-void	ft_strncpy(char *dst, char *src, int n);
+void	ft_add_stash_to_book(t_book *book, t_stash *stash);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
 
 char	*get_next_line(int fd);
 
