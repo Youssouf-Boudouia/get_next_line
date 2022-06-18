@@ -6,7 +6,7 @@
 /*   By: yboudoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:51:38 by yboudoui          #+#    #+#             */
-/*   Updated: 2022/06/13 18:22:47 by yboudoui         ###   ########.fr       */
+/*   Updated: 2022/06/14 15:13:53 by yboudoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <limits.h>
 # include <unistd.h>
 
-#include <stdio.h>
 # if BUFFER_SIZE < 0
 #  undef BUFFER_SIZE
 #  define BUFFER_SIZE 0
